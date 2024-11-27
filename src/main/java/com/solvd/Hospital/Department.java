@@ -1,19 +1,28 @@
 package com.solvd.Hospital;
 
-import java.util.Objects;
-import java.util.List;
+import com.solvd.Hospital.exceptions.EquipmentNotFoundException;
 
-abstract class Department {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+abstract class Department implements EquipmentManagement {
     protected String departmentName;
     protected int numberOfBeds;
     protected int daysWithoutFatalities;
     protected List<Doctor> doctors;
+    protected List<String> equipmentList;
 
-    public Department(String departmentName, int numberOfBeds, int daysWithoutFatalities, List<Doctor> doctors) {
+    public Department(String departmentName, int numberOfBeds, int daysWithoutFatalities, List<Doctor> doctors, List<String> equipmentList) {
         this.departmentName = departmentName;
         this.numberOfBeds = numberOfBeds;
         this.daysWithoutFatalities = daysWithoutFatalities;
         this.doctors = doctors;
+        this.equipmentList = (equipmentList != null) ? equipmentList : new ArrayList<>();
+    }
+
+    public Department(String departmentName, int numberOfBeds, int daysWithoutFatalities, List<Doctor> doctors) {
+        this(departmentName, numberOfBeds, daysWithoutFatalities, doctors, new ArrayList<>());
     }
 
     public String getDepartmentName() {
@@ -40,7 +49,7 @@ abstract class Department {
         this.daysWithoutFatalities = daysWithoutFatalities;
     }
 
-     abstract String departmentDescription();
+    abstract String departmentDescription();
 
     public List<Doctor> getDoctors() {
         return doctors;
@@ -51,11 +60,28 @@ abstract class Department {
     }
 
     @Override
+    public void removeEquipment(String equipment) throws EquipmentNotFoundException {
+        if (!equipmentList.contains(equipment)) {
+            throw new EquipmentNotFoundException("Equipment " + equipment + " not found in department.");
+        }
+        equipmentList.remove(equipment);
+        System.out.println(equipment + " removed from the department.");
+    }
+
+    public void addEquipment(String equipment) {
+        equipmentList.add(equipment);
+        System.out.println(equipment + " added to the department.");
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Department that = (Department) o;
-        return numberOfBeds == that.numberOfBeds && daysWithoutFatalities == that.daysWithoutFatalities && Objects.equals(departmentName, that.departmentName) && Objects.equals(doctors, that.doctors);
+        return numberOfBeds == that.numberOfBeds &&
+                daysWithoutFatalities == that.daysWithoutFatalities &&
+                Objects.equals(departmentName, that.departmentName) &&
+                Objects.equals(doctors, that.doctors);
     }
 
     @Override
@@ -72,5 +98,8 @@ abstract class Department {
                 ", doctors=" + doctors +
                 '}';
     }
-}
 
+    public String getEquipmentStatus() {
+        return "Current equipment in the department: " + String.join(", ", equipmentList);
+    }
+}

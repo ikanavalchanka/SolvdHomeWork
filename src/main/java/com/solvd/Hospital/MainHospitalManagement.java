@@ -1,6 +1,11 @@
 package com.solvd.Hospital;
 
+import com.solvd.Hospital.exceptions.EquipmentNotFoundException;
+import com.solvd.Hospital.exceptions.InvalidRoomAssignmentException;
+import com.solvd.Hospital.exceptions.InvalidShiftOperationException;
+
 import java.util.Arrays;
+import java.util.List;
 
 public class MainHospitalManagement {
     public static void main(String[] args) {
@@ -19,17 +24,31 @@ public class MainHospitalManagement {
         Nurse nurseEmergency = new Nurse("Nurse Sarah", 29, "Female", "Emergency", 3);
         Nurse nurseSurgery = new Nurse("Nurse Olivia", 33, "Female", "Surgery", 6);
 
-        Department cardiology = new CardiologyDepartment("Cardiology", 20, 100, Arrays.asList(cardiologyDoctor), 1, true);
-        Department neurologyDepartment = new NeurologicalDepartment("Neurology", 15, 50, Arrays.asList(neurologyDoctor), 1, 5);
-        Department emergency = new EmergencyDepartment("Emergency", 30, 200, Arrays.asList(emergencyDoctor), 1, true);
-        Department surgery = new SurgeryDepartment("Surgery", 25, 150, Arrays.asList(surgeryDoctor), 1, true);
+        Department cardiology = new CardiologyDepartment("Cardiology", 20, 100, List.of(cardiologyDoctor), 1, true);
+        NeurologicalDepartment neurologyDepartment = new NeurologicalDepartment("Neurology", 15, 50, List.of(neurologyDoctor), 1, 5);
+        Department emergency = new EmergencyDepartment("Emergency", 30, 200, List.of(emergencyDoctor), 1, true);
+        Department surgery = new SurgeryDepartment("Surgery", 25, 150, List.of(surgeryDoctor), 1, true);
 
-        Receptionist receptionist1 = new Receptionist("Hanna Leen", 29,"female",1,"day");
+        Receptionist receptionist1 = new Receptionist("Hanna Leen", 29, "female", 1, "day");
+
+        System.out.println("----- Patient Management -----");
+        try {
+            cardiologyDoctor.addPatient(new Patient("John Doe", 45, "Male", "P12345", "Heart Disease", "Cardiology"));
+            neurologyDoctor.addPatient(new Patient("Jane Doe", 30, "Female", "P67890", "Migraine", "Neurology"));
+        } catch (Exception e) {
+            HospitalLogger.log.warning("Exception during patient management: " + e.getMessage());
+        }
 
         Room roomCardiology = new Room(RoomType.ICU, 101);
         Room roomNeurology = new Room(RoomType.GENERAL, 102);
         Room roomEmergency = new Room(RoomType.EMERGENCY, 103);
         Room roomSurgery = new Room(RoomType.OPERATING, 104);
+
+        try {
+            cardiologyDoctor.assignRoom(patientCardiology, roomCardiology);
+        } catch (InvalidRoomAssignmentException e) {
+            HospitalLogger.log.warning("Exception during room assignment: " + e.getMessage());
+        }
 
         Appointment appointmentCardiology = new Appointment(cardiologyDoctor, patientCardiology, "2024-12-01");
         Appointment appointmentNeurology = new Appointment(neurologyDoctor, patientNeurology, "2024-12-02");
@@ -51,10 +70,17 @@ public class MainHospitalManagement {
         Medication medicationEmergency = new Medication("Painkiller", "Injection", "50mg");
         Medication medicationSurgery = new Medication("Antibiotics", "Capsule", "200mg");
 
+
         Payment paymentCardiology = new Payment(500.0, "2024-12-05");
         Payment paymentNeurology = new Payment(600.0, "2024-12-06");
         Payment paymentEmergency = new Payment(300.0, "2024-12-07");
         Payment paymentSurgery = new Payment(800.0, "2024-12-08");
+
+        try {
+            receptionist1.processPayment(paymentCardiology);
+        } catch (Exception e) {
+            HospitalLogger.log.warning("Exception during payment processing: " + e.getMessage());
+        }
 
         Insurance insuranceCardiology = new Insurance("HealthCorp", "HC123");
         Insurance insuranceNeurology = new Insurance("MediCare", "MC456");
@@ -86,8 +112,20 @@ public class MainHospitalManagement {
         emergencyDoctor.treatPatient(patientEmergency);
         surgeryDoctor.treatPatient(patientSurgery);
 
-        nurseCardiology.startShift();
-        nurseCardiology.endShift();
+
+        try {
+            nurseCardiology.startShift();
+            nurseCardiology.startShift();
+        } catch (InvalidShiftOperationException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+
+        try {
+            nurseCardiology.endShift();
+            nurseCardiology.endShift();
+        } catch (InvalidShiftOperationException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
         nurseNeurology.startShift();
         nurseNeurology.endShift();
         nurseEmergency.startShift();
@@ -100,13 +138,16 @@ public class MainHospitalManagement {
         receptionist1.processPayment(paymentEmergency);
         receptionist1.processPayment(paymentSurgery);
 
-        NeurologicalDepartment neurology = (NeurologicalDepartment) neurologyDepartment; // Приведение типа
-        neurology.addEquipment("MRI Machine");
-        neurology.addEquipment("CT Scanner");
-        System.out.println(neurology.getEquipmentStatus());
-        neurology.removeEquipment("CT Scanner");
-        System.out.println(neurology.getEquipmentStatus());
-        System.out.println();
+        neurologyDepartment.addEquipment("MRI Machine");
+        neurologyDepartment.addEquipment("CT Scanner");
+        System.out.println(neurologyDepartment.getEquipmentStatus());
+
+        try {
+            neurologyDepartment.removeEquipment("CT Scanner");
+        } catch (EquipmentNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
 
         System.out.println("----- Patients -----");
         System.out.println(patientCardiology);
@@ -187,7 +228,7 @@ public class MainHospitalManagement {
 
         System.out.println("----- Department Descriptions -----");
         System.out.println(cardiology.departmentDescription());
-        System.out.println(neurology.departmentDescription());
+        System.out.println(neurologyDepartment.departmentDescription());
         System.out.println(emergency.departmentDescription());
         System.out.println(surgery.departmentDescription());
         System.out.println();

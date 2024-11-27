@@ -1,8 +1,10 @@
 package com.solvd.Hospital;
+
 import java.util.List;
+
 class CardiologyDepartment extends Department {
-    private int numberOfCardiologists;
-    private boolean hasAdvancedCardiacMachines;
+    private final int numberOfCardiologists;
+    private final boolean hasAdvancedCardiacMachines;
 
     public CardiologyDepartment(String departmentName, int numberOfBeds, int daysWithoutFatalities, List<Doctor> doctors,
                                 int numberOfCardiologists, boolean hasAdvancedCardiacMachines) {
@@ -19,5 +21,20 @@ class CardiologyDepartment extends Department {
                 ", Days without fatalities: " + getDaysWithoutFatalities() +
                 ", Cardiologists: " + numberOfCardiologists +
                 ", Advanced Cardiac Machines: " + (hasAdvancedCardiacMachines ? "Yes" : "No");
+    }
+
+    @Override
+    public void addEquipment(String equipment) {
+
+    }
+
+    @Override
+    public void removeEquipment(String equipment) {
+
+    }
+
+    @Override
+    public String getEquipmentStatus() {
+        return null;
     }
 }

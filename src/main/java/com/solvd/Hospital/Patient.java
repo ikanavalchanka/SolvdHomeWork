@@ -6,13 +6,21 @@ class Patient extends Person {
     private String patientId;
     private String illness;
     private String department;
+    private Room room;
 
-    // Конструктор теперь принимает все необходимые параметры
     public Patient(String name, int age, String gender, String patientId, String illness, String department) {
         super(name, age, gender);
         this.patientId = patientId;
         this.illness = illness;
         this.department = department;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public String getPatientId() {

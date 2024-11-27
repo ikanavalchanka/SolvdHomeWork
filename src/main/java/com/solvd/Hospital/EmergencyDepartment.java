@@ -1,8 +1,10 @@
 package com.solvd.Hospital;
+
 import java.util.List;
+
 class EmergencyDepartment extends Department {
-    private int numberOfAmbulances;
-    private boolean has24HourService;
+    private final int numberOfAmbulances;
+    private final boolean has24HourService;
 
     public EmergencyDepartment(String departmentName, int numberOfBeds, int daysWithoutFatalities, List<Doctor> doctors,
                                int numberOfAmbulances, boolean has24HourService) {
@@ -18,5 +20,20 @@ class EmergencyDepartment extends Department {
                 ", Days without fatalities: " + getDaysWithoutFatalities() +
                 ", Ambulances: " + numberOfAmbulances +
                 ", 24 Hour Service: " + (has24HourService ? "Yes" : "No");
+    }
+
+    @Override
+    public void addEquipment(String equipment) {
+
+    }
+
+    @Override
+    public void removeEquipment(String equipment) {
+
+    }
+
+    @Override
+    public String getEquipmentStatus() {
+        return null;
     }
 }

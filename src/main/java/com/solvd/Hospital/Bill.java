@@ -1,13 +1,13 @@
 package com.solvd.Hospital;
 
 class Bill {
-private Patient patient;
-private double totalAmount;
+    private Patient patient;
+    private double totalAmount;
 
-public Bill(Patient patient, double totalAmount) {
-    this.patient = patient;
-    this.totalAmount = totalAmount;
-}
+    public Bill(Patient patient, double totalAmount) {
+        this.patient = patient;
+        this.totalAmount = totalAmount;
+    }
 
     public Patient getPatient() {
         return patient;
@@ -26,7 +26,7 @@ public Bill(Patient patient, double totalAmount) {
     }
 
     @Override
-public String toString() {
-    return "Bill for patient " + patient.getName() + ": $" + totalAmount;
-}
+    public String toString() {
+        return "Bill for patient " + patient.getName() + ": $" + totalAmount;
+    }
 }

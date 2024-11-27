@@ -1,15 +1,17 @@
 package com.solvd.Hospital;
 
+import com.solvd.Hospital.exceptions.EquipmentNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 class NeurologicalDepartment extends Department implements EquipmentManagement {
-    private int numberOfOperatingRooms;
-    private int numberOfNeuroSpecialists;
-    private List<String> equipmentList;
+    private final int numberOfOperatingRooms;
+    private final int numberOfNeuroSpecialists;
+    private final List<String> equipmentList;
 
     public NeurologicalDepartment(String departmentName, int numberOfBeds, int daysWithoutFatalities,
-    List<Doctor> doctors, int numberOfOperatingRooms, int numberOfNeuroSpecialists) {
+                                  List<Doctor> doctors, int numberOfOperatingRooms, int numberOfNeuroSpecialists) {
         super(departmentName, numberOfBeds, daysWithoutFatalities, doctors);
         this.numberOfOperatingRooms = numberOfOperatingRooms;
         this.numberOfNeuroSpecialists = numberOfNeuroSpecialists;
@@ -31,12 +33,12 @@ class NeurologicalDepartment extends Department implements EquipmentManagement {
     }
 
     @Override
-    public void removeEquipment(String equipment) {
+    public void removeEquipment(String equipment) throws EquipmentNotFoundException {
         if (equipmentList.contains(equipment)) {
             equipmentList.remove(equipment);
             System.out.println(equipment + " has been removed from the Neurological Department.");
         } else {
-            System.out.println("Equipment not found.");
+            throw new EquipmentNotFoundException("Equipment " + equipment + " not found in Neurological Department.");
         }
     }
 

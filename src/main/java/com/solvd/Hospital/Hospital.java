@@ -1,18 +1,19 @@
 package com.solvd.Hospital;
 
-     class Hospital {
-         private static int totalPatients;
-         static {
+class Hospital {
+    private static int totalPatients;
 
-             totalPatients = 4;
-             System.out.println("Hospital system initialized.");
-         }
+    static {
 
-         public static void incrementPatientCount() {
-             totalPatients++;
-         }
+        totalPatients = 4;
+        System.out.println("Hospital system initialized.");
+    }
 
-         public static int getTotalPatients() {
-             return totalPatients;
-         }
-     }
+    public static void incrementPatientCount() {
+        totalPatients++;
+    }
+
+    public static int getTotalPatients() {
+        return totalPatients;
+    }
+}
