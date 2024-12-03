@@ -8,8 +8,8 @@ import java.util.List;
 
 class Doctor extends Person implements Treatable, PatientManagement {
     private static final int MAX_PATIENTS = 5;
-    private String speciality;
     private final List<Patient> patients = new ArrayList<>();
+    private String speciality;
 
     public Doctor(String name, int age, String gender, String speciality) {
         super(name, age, gender);

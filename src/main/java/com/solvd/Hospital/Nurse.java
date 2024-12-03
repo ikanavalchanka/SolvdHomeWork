@@ -6,13 +6,13 @@ import com.solvd.Hospital.exceptions.InvalidShiftOperationException;
 class Nurse extends Person implements PatientManagement, ShiftManagement {
     private String nurseDepartment;
     private int yearsOfExperience;
-    private boolean isShiftActive;
+    private NurseShiftRegistry shiftRegistry;
 
     public Nurse(String name, int age, String gender, String nurseDepartment, int yearsOfExperience) {
         super(name, age, gender);
         this.nurseDepartment = nurseDepartment;
         this.yearsOfExperience = yearsOfExperience;
-        this.isShiftActive = false;
+        this.shiftRegistry = new NurseShiftRegistry();
     }
 
     @Override
@@ -27,24 +27,27 @@ class Nurse extends Person implements PatientManagement, ShiftManagement {
 
     @Override
     public void assignRoom(Patient patient, Room room) throws InvalidRoomAssignmentException {
+
     }
 
     @Override
     public void startShift() throws InvalidShiftOperationException {
-        if (isShiftActive) {
+        if (shiftRegistry.getShift(name).equals("No shift assigned")) {
+            shiftRegistry.addShift(name, "Active");
+            System.out.println(name + " has started the shift.");
+        } else {
             throw new InvalidShiftOperationException(name + " cannot start the shift because it's already active.");
         }
-        isShiftActive = true;
-        System.out.println(name + " has started the shift.");
     }
 
     @Override
     public void endShift() throws InvalidShiftOperationException {
-        if (!isShiftActive) {
+        if (!shiftRegistry.getShift(name).equals("No shift assigned")) {
+            shiftRegistry.endShift(name);
+            System.out.println(name + " has ended the shift.");
+        } else {
             throw new InvalidShiftOperationException(name + " cannot end the shift because no shift has been started.");
         }
-        isShiftActive = false;
-        System.out.println(name + " has ended the shift.");
     }
 
     public String getNurseDepartment() {

@@ -4,7 +4,6 @@ import com.solvd.Hospital.exceptions.EquipmentNotFoundException;
 import com.solvd.Hospital.exceptions.InvalidRoomAssignmentException;
 import com.solvd.Hospital.exceptions.InvalidShiftOperationException;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MainHospitalManagement {
@@ -49,6 +48,26 @@ public class MainHospitalManagement {
         } catch (InvalidRoomAssignmentException e) {
             HospitalLogger.log.warning("Exception during room assignment: " + e.getMessage());
         }
+        HospitalRegistry.registerPatient(patientCardiology);
+        HospitalRegistry.registerPatient(patientNeurology);
+        HospitalRegistry.registerPatient(patientEmergency);
+        HospitalRegistry.registerPatient(patientSurgery);
+
+        HospitalRegistry.registerStaff(cardiologyDoctor);
+        HospitalRegistry.registerStaff(neurologyDoctor);
+        HospitalRegistry.registerStaff(emergencyDoctor);
+        HospitalRegistry.registerStaff(surgeryDoctor);
+
+        HospitalRegistry.registerStaff(nurseCardiology);
+        HospitalRegistry.registerStaff(nurseNeurology);
+        HospitalRegistry.registerStaff(nurseEmergency);
+        HospitalRegistry.registerStaff(nurseSurgery);
+        HospitalRegistry.registerStaff(receptionist1);
+
+        System.out.println("----- Patients and Staff -----");
+        System.out.println("Registered patients: " + HospitalRegistry.getAllPatients());
+        System.out.println("Registered staff: " + HospitalRegistry.getAllStaff());
+
 
         Appointment appointmentCardiology = new Appointment(cardiologyDoctor, patientCardiology, "2024-12-01");
         Appointment appointmentNeurology = new Appointment(neurologyDoctor, patientNeurology, "2024-12-02");
@@ -106,37 +125,38 @@ public class MainHospitalManagement {
         neurologyDoctor.addPatient(patientNeurology);
         emergencyDoctor.addPatient(patientEmergency);
         surgeryDoctor.addPatient(patientSurgery);
-
+        System.out.println();
         cardiologyDoctor.treatPatient(patientCardiology);
         neurologyDoctor.treatPatient(patientNeurology);
         emergencyDoctor.treatPatient(patientEmergency);
         surgeryDoctor.treatPatient(patientSurgery);
-
+        System.out.println();
 
         try {
             nurseCardiology.startShift();
             nurseCardiology.startShift();
+            nurseCardiology.endShift();
         } catch (InvalidShiftOperationException e) {
             System.err.println("Error: " + e.getMessage());
         }
 
-        try {
-            nurseCardiology.endShift();
-            nurseCardiology.endShift();
-        } catch (InvalidShiftOperationException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
-        nurseNeurology.startShift();
-        nurseNeurology.endShift();
-        nurseEmergency.startShift();
-        nurseEmergency.endShift();
-        nurseSurgery.startShift();
-        nurseSurgery.endShift();
+
+        NurseShiftRegistry shiftRegistry = new NurseShiftRegistry();
+        shiftRegistry.addShift("Nurse Mary", "Day");
+        shiftRegistry.addShift("Nurse Lucy", "Night");
+
+        System.out.println("Shift for Nurse Mary: " + shiftRegistry.getShift("Nurse Mary"));
+        System.out.println("Shift for Nurse Lucy: " + shiftRegistry.getShift("Nurse Lucy"));
+
+        shiftRegistry.endShift("Nurse Mary");
+        System.out.println("Shift for Nurse Mary: " + shiftRegistry.getShift("Nurse Mary"));
+        System.out.println();
 
         receptionist1.processPayment(paymentCardiology);
         receptionist1.processPayment(paymentNeurology);
         receptionist1.processPayment(paymentEmergency);
         receptionist1.processPayment(paymentSurgery);
+        System.out.println();
 
         neurologyDepartment.addEquipment("MRI Machine");
         neurologyDepartment.addEquipment("CT Scanner");
